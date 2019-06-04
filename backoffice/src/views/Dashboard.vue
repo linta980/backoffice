@@ -2,16 +2,25 @@
   <dir>
     <h1 class="subheading grey--text">Dashboard</h1>
 
+
     <v-container class="my-5">
+      
       <v-layout class="mb-3">
-        <v-btn flat class="grey--text ml-3" @click="sortBy('title')">
-          <v-icon light class="">folder</v-icon>
-          <span class="caption text-lowercase pl-2">By Title</span>
-        </v-btn>
-        <v-btn flat class="grey--text" @click="sortBy('person')">
-          <v-icon light>person</v-icon>
-          <span class="caption text-lowercase pl-2">By Person</span>
-        </v-btn>
+        <v-tooltip top>
+          <v-btn flat class="grey--text ml-3" @click="sortBy('title')" slot="activator">
+            <v-icon light class>folder</v-icon>
+            <span class="caption text-lowercase pl-2">By Title</span>
+          </v-btn>
+          <span>Sort items by Title</span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <v-btn flat class="grey--text" @click="sortBy('person')" slot="activator">
+            <v-icon light>person</v-icon>
+            <span class="caption text-lowercase pl-2">By Person</span>
+          </v-btn>
+          <span>Sort items by Person name</span>
+        </v-tooltip>
       </v-layout>
 
       <v-card flat v-for="project in projects" :key="project.title">
