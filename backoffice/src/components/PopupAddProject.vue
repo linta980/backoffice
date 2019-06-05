@@ -29,7 +29,6 @@
             class="success mx-0 mt-3"
             @click="submit"
           >Add project</v-btn>
-          <v-btn flat class="success mx-0 mt-3" @click="submit">Add Project</v-btn>
         </v-form>
       </v-card-text>
     </v-card>

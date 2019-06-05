@@ -1,6 +1,15 @@
 <template>
   <div>
-    <h1 class="subheading grey--text">Teams</h1>
+    <v-snackbar v-model="snackbar" color="success" :timeout="3000" top class="width:400px;">
+      <span class="subheading">New User added</span>
+      <v-btn flat class="ml-0" small @click="closeSnackBar">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
+
+
+    <PopupAddNewwTeamMember @user_added="snackbar = true"/>
+
 
     <v-container class="my-5">
       <!-- row --znaci  bice red a wrap je da ih wrapuje kada nema dovoljno mesta! -->
@@ -33,7 +42,10 @@
 </template>
 
 <script>
+import PopupAddNewwTeamMember from "../components/PopupAddNewwTeamMember";
+
 export default {
+  components: { PopupAddNewwTeamMember },
   data() {
     return {
       team: [
@@ -50,8 +62,17 @@ export default {
           avatar: "/avatar-4.png"
         },
         { name: "Yoshi", role: "Sales guru", avatar: "/avatar-5.png" }
-      ]
+      ],
+      snackbar: false
     };
+  },
+  methods: {
+    open() {
+
+    },
+    closeSnackBar(){
+      this.snackbar=false
+    }
   }
 };
 </script>
