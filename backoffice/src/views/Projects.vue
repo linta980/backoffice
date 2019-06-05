@@ -1,19 +1,34 @@
 <template>
   <div>
+
+    <!-- Editovan Content iz projekta -->
+    <v-snackbar v-model="content" color="success" :timeout="3000" top class="width:400px;" >
+      <span class="subheading">Content has been edited</span>
+      <v-btn flat class="ml-0" small @click="closeEditedContent">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar> 
+
+
+
     <h1 class="subheading grey--text">Projects</h1>
 
-    
-
-    <v-container class="my-5">
+    <v-container class="my-5 subheading">
       <v-expansion-panel>
         <v-expansion-panel-content v-for="project in niz" :key="project.title" class="pa-1">
           <template v-slot:header>
             <div>{{project.title}}</div>
           </template>
 
-          <v-card>
-            <v-card-text class="grey--text pa-3 ">{{project.content}}</v-card-text>
-          </v-card>
+          <v-layout row>
+            <v-flex xs12>
+              <v-card-text class="grey--text pa-3">{{project.content}}</v-card-text>
+            </v-flex>
+            <v-flex>
+              <!-- v-bind:niz="project" -->
+              <PopupEditContent v-bind:niz="project" @content_edited="content=true"/>
+            </v-flex>
+          </v-layout>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-container>
@@ -21,71 +36,43 @@
 </template>
 
 <script>
-import db from '@/fb'
+import PopupEditContent from "../components/PopupEditContent.vue";
+import db from "@/fb";
 export default {
+  components: { PopupEditContent },
   data() {
     return {
-      projects: [
-        {
-          title: "Design a new website",
-          person: "The Net Ninja",
-          due: "1st Jan 2019",
-          status: "ongoing",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!"
-        },
-        {
-          title: "Enlarge your Dick",
-          person: "The Net Ninja",
-          due: "31st Jan 2019",
-          status: "ongoing",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!"
-        },
-        {
-          title: "Code up the homepage",
-          person: "Chun Li",
-          due: "10th Jan 2019",
-          status: "complete",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!"
-        },
-        {
-          title: "Design video thumbnails",
-          person: "Ryu",
-          due: "20th Dec 2018",
-          status: "complete",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!"
-        },
-        {
-          title: "Create a community forum",
-          person: "Gouken",
-          due: "20th Oct 2018",
-          status: "overdue",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!"
-        }
-      ],
-      niz:[]
+      niz: [],
+      kurcina: "",
+      content:false
     };
   },
-  computed:{
-      myProjects(){
-          return this.projects.filter( project =>{
-              return project.person==='The Net Ninja'
-          })
-      }
+  methods:{
+    closeEditedContent(){
+      this.content=false
+    }
   },
-  mounted(){
-      db.collection("backoffice").get().then((result)=>{
-          result.forEach(element => {
-              this.niz.push(element.data())
+  computed: {
+    myProjects() {
+      return this.projects.filter(project => {
+        return project.person === "The Net Ninja";
+      });
+    }
+  },
+  mounted() {
+    db.collection("backoffice")
+      .get()
+      .then(result => {
+      
+
+        result.docs.forEach(element => {
+          this.niz.push({
+            id: element.id,
+            title: element._document.proto.fields.title.stringValue,
+            content: element._document.proto.fields.content.stringValue
           });
-    this.niz.forEach(element => {
-                console.log(element.title)         
-          });
-      })
+        });
+      });
   }
 };
 </script>

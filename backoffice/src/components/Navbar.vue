@@ -1,11 +1,13 @@
 <template>
   <nav>
     <v-snackbar v-model="snackbar" color="success" :timeout="3000" top class="width:400px;">
-      <span class="subheading">Project has been added </span>
+      <span class="subheading">Project has been added</span>
       <v-btn flat class="ml-0" small @click="closeSnackBar">
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
+
+    
 
     <v-toolbar flat app class="text-uppercase grey--text">
       <v-toolbar-side-icon class="grey--text" @click="drawer = ! drawer"></v-toolbar-side-icon>
@@ -25,7 +27,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-tile v-for="(item, index) in links" :key="index" @click router :to="item.route">
+          <v-list-tile v-for="(item, index) in links" :key="index" router :to="item.route">
             <v-list-tile-title>{{ item.text }}</v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -54,7 +56,8 @@
 
       <v-layout row wrap>
         <v-flex>
-          <Popup @projectAdded="snackbar=true"/>
+          <PopupAddProject @projectAdded="snackbar=true"/>
+          <!-- <PopupEditContent @content_edited="content=true"/> -->
         </v-flex>
       </v-layout>
     </v-navigation-drawer>
@@ -62,9 +65,10 @@
 </template>
 
 <script>
-import Popup from "./Popup";
+import PopupAddProject from "./PopupAddProject";
+import PopupEditContent from "../components/PopupEditContent";
 export default {
-  components: { Popup },
+  components: { PopupAddProject, PopupEditContent },
   name: "Navbar",
   data() {
     return {
@@ -75,12 +79,16 @@ export default {
         { icon: "person", text: "Team", route: "/team" },
         { icon: "accessible", text: "Test", route: "/test" }
       ],
-      snackbar: false
+      snackbar: false,
+      content: false
     };
   },
   methods: {
     closeSnackBar() {
       this.snackbar = false;
+    },
+    closeEditedContent() {
+      this.content = false;
     }
   }
 };
